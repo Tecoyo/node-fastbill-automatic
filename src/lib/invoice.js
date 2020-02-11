@@ -365,6 +365,31 @@ class Invoice extends FastbillAPI {
         });
     }
 
+
+    sendbyemail(id,email,extra) {
+
+        return new Promise((resolve, reject) => {
+            function onResult(err, resultset) {
+                if (err) {
+                    return reject(
+                        new FastbillInvalidRequestError({
+                            message: 'Invalid Request to Fastbill.',
+                            detail: err
+                        })
+                    );
+                }
+                resolve(resultset.REMAINING_CREDITS);
+            }
+
+            typeOf(id).mustBe('number');
+
+            this.$request({
+                service: this.$scope + 'sendbyemail',
+                data: {INVOICE_ID: id,RECIPIENT:email,...extra}
+            }, onResult);
+        });
+    }
+
     /**
      * Invoice#setpaid
      *
